@@ -23,7 +23,8 @@ namespace DijkstrasAlgorithm
 
             try
             {
-                myGraph.DepthFirst("l");                                                    // Start at node "L" and print graph.
+                myGraph.ShortestPath("a");
+                myGraph.BreadthFirst("a");                                                    // Start at node "L" and print graph.
             }
             catch (IndexOutOfRangeException e)
             {

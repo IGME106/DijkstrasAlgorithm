@@ -18,8 +18,11 @@ namespace DijkstrasAlgorithm
 {
     class Vertex
     {
-        public string Name { get; set; }
-        public bool Visited { get; set; }
+        public string   Name        { get; set; }
+        public bool     Visited     { get; set; }
+        public int      Distance    { get; set; }
+        public Vertex   Neighbor    { get; set; }
+        public bool     Final       { get; set; }
 
         /// <summary>
         /// Constructor
@@ -28,6 +31,24 @@ namespace DijkstrasAlgorithm
         public Vertex (string name)
         {
             Name = name;
+
+            ResetVertex();
+        }
+
+        /// <summary>
+        /// Resets the properties in the vertex
+        /// </summary>
+        public void ResetVertex()
+        {            
+            Final       = false;
+            Distance    = int.MaxValue;
+            Neighbor    = null;
+
+            ResetVisited();
+        }
+
+        public void ResetVisited()
+        {
             Visited = false;
         }
 
