@@ -22,44 +22,44 @@ namespace DijkstrasAlgorithm
         public static List<Vertex> GraphList { get; set; }
         private static List<Vertex> VisitedList { get; set; }
 
-        //private int[,] adjMatrix = new int[26, 26]                                          // Create a pretty large adjacency matrix
-        //    {   //A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
-        //  /*A*/ { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*B*/ { 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*C*/ { 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*D*/ { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*E*/ { 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*F*/ { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*G*/ { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*H*/ { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*I*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*J*/ { 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*K*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*L*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*M*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*N*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*O*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*P*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-        //  /*Q*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*R*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*S*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
-        //  /*T*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*U*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-        //  /*V*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 },
-        //  /*W*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
-        //  /*X*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 },
-        //  /*Y*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
-        //  /*Z*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 }
-        //    };
+        private int[,] adjMatrix = new int[26, 26]                                          // Create a pretty large adjacency matrix
+            {   //A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+          /*A*/ { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*B*/ { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*C*/ { 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*D*/ { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*E*/ { 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*F*/ { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*G*/ { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*H*/ { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*I*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*J*/ { 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*K*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*L*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*M*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*N*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*O*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*P*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+          /*Q*/ { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*R*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+          /*S*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
+          /*T*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+          /*U*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+          /*V*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+          /*W*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
+          /*X*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 },
+          /*Y*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
+          /*Z*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 }
+            };
 
-        private int[,] adjMatrix = new int[5, 5]
-        {    //A, B, C, D, E
-        /*A*/ {0, 5, 1, 0, 0 },
-        /*B*/ {5, 0, 1, 2, 0 },
-        /*C*/ {1, 1, 0, 1, 5 },
-        /*D*/ {0, 2, 1, 0, 4 },
-        /*E*/ {0, 0, 5, 4, 0 }
-        };
+        //private int[,] adjMatrix = new int[5, 5]
+        //{    //A, B, C, D, E
+        ///*A*/ {0, 1, 3, 0, 0 },
+        ///*B*/ {1, 0, 1, 4, 0 },
+        ///*C*/ {3, 1, 0, 2, 1 },
+        ///*D*/ {0, 4, 2, 0, 1 },
+        ///*E*/ {0, 0, 1, 1, 0 }
+        //};
 
         /// <summary>
         /// Constructor
@@ -70,7 +70,7 @@ namespace DijkstrasAlgorithm
             GraphList = new List<Vertex>();
             VisitedList = new List<Vertex>();
 
-            InstantiateVertexes();            
+            InstantiateVertexes();
         }
 
         /// <summary>
@@ -83,27 +83,27 @@ namespace DijkstrasAlgorithm
             Vertex vC = new Vertex("C");
             Vertex vD = new Vertex("D");
             Vertex vE = new Vertex("E");
-            //Vertex vF = new Vertex("F");
-            //Vertex vG = new Vertex("G");
-            //Vertex vH = new Vertex("H");
-            //Vertex vI = new Vertex("I");
-            //Vertex vJ = new Vertex("J");
-            //Vertex vK = new Vertex("K");
-            //Vertex vL = new Vertex("L");
-            //Vertex vM = new Vertex("M");
-            //Vertex vN = new Vertex("N");
-            //Vertex vO = new Vertex("O");
-            //Vertex vP = new Vertex("P");
-            //Vertex vQ = new Vertex("Q");
-            //Vertex vR = new Vertex("R");
-            //Vertex vS = new Vertex("S");
-            //Vertex vT = new Vertex("T");
-            //Vertex vU = new Vertex("U");
-            //Vertex vV = new Vertex("V");
-            //Vertex vW = new Vertex("W");
-            //Vertex vX = new Vertex("X");
-            //Vertex vY = new Vertex("Y");
-            //Vertex vZ = new Vertex("Z");
+            Vertex vF = new Vertex("F");
+            Vertex vG = new Vertex("G");
+            Vertex vH = new Vertex("H");
+            Vertex vI = new Vertex("I");
+            Vertex vJ = new Vertex("J");
+            Vertex vK = new Vertex("K");
+            Vertex vL = new Vertex("L");
+            Vertex vM = new Vertex("M");
+            Vertex vN = new Vertex("N");
+            Vertex vO = new Vertex("O");
+            Vertex vP = new Vertex("P");
+            Vertex vQ = new Vertex("Q");
+            Vertex vR = new Vertex("R");
+            Vertex vS = new Vertex("S");
+            Vertex vT = new Vertex("T");
+            Vertex vU = new Vertex("U");
+            Vertex vV = new Vertex("V");
+            Vertex vW = new Vertex("W");
+            Vertex vX = new Vertex("X");
+            Vertex vY = new Vertex("Y");
+            Vertex vZ = new Vertex("Z");
 
             GraphList.Add(vA);
             GraphDictionary.Add("A", vA);
@@ -120,68 +120,68 @@ namespace DijkstrasAlgorithm
             GraphList.Add(vE);
             GraphDictionary.Add("E", vE);
 
-            //GraphList.Add(vF);
-            //GraphDictionary.Add("F", vF);
+            GraphList.Add(vF);
+            GraphDictionary.Add("F", vF);
 
-            //GraphList.Add(vG);
-            //GraphDictionary.Add("G", vG);
+            GraphList.Add(vG);
+            GraphDictionary.Add("G", vG);
 
-            //GraphList.Add(vH);
-            //GraphDictionary.Add("H", vH);
+            GraphList.Add(vH);
+            GraphDictionary.Add("H", vH);
 
-            //GraphList.Add(vI);
-            //GraphDictionary.Add("I", vI);
+            GraphList.Add(vI);
+            GraphDictionary.Add("I", vI);
 
-            //GraphList.Add(vJ);
-            //GraphDictionary.Add("J", vJ);
+            GraphList.Add(vJ);
+            GraphDictionary.Add("J", vJ);
 
-            //GraphList.Add(vK);
-            //GraphDictionary.Add("K", vK);
+            GraphList.Add(vK);
+            GraphDictionary.Add("K", vK);
 
-            //GraphList.Add(vL);
-            //GraphDictionary.Add("L", vL);
+            GraphList.Add(vL);
+            GraphDictionary.Add("L", vL);
 
-            //GraphList.Add(vM);
-            //GraphDictionary.Add("M", vM);
+            GraphList.Add(vM);
+            GraphDictionary.Add("M", vM);
 
-            //GraphList.Add(vN);
-            //GraphDictionary.Add("N", vN);
+            GraphList.Add(vN);
+            GraphDictionary.Add("N", vN);
 
-            //GraphList.Add(vO);
-            //GraphDictionary.Add("O", vO);
+            GraphList.Add(vO);
+            GraphDictionary.Add("O", vO);
 
-            //GraphList.Add(vP);
-            //GraphDictionary.Add("P", vP);
+            GraphList.Add(vP);
+            GraphDictionary.Add("P", vP);
 
-            //GraphList.Add(vQ);
-            //GraphDictionary.Add("Q", vQ);
+            GraphList.Add(vQ);
+            GraphDictionary.Add("Q", vQ);
 
-            //GraphList.Add(vR);
-            //GraphDictionary.Add("R", vR);
+            GraphList.Add(vR);
+            GraphDictionary.Add("R", vR);
 
-            //GraphList.Add(vS);
-            //GraphDictionary.Add("S", vS);
+            GraphList.Add(vS);
+            GraphDictionary.Add("S", vS);
 
-            //GraphList.Add(vT);
-            //GraphDictionary.Add("T", vT);
+            GraphList.Add(vT);
+            GraphDictionary.Add("T", vT);
 
-            //GraphList.Add(vU);
-            //GraphDictionary.Add("U", vU);
+            GraphList.Add(vU);
+            GraphDictionary.Add("U", vU);
 
-            //GraphList.Add(vV);
-            //GraphDictionary.Add("V", vV);
+            GraphList.Add(vV);
+            GraphDictionary.Add("V", vV);
 
-            //GraphList.Add(vW);
-            //GraphDictionary.Add("W", vW);
+            GraphList.Add(vW);
+            GraphDictionary.Add("W", vW);
 
-            //GraphList.Add(vX);
-            //GraphDictionary.Add("X", vX);
+            GraphList.Add(vX);
+            GraphDictionary.Add("X", vX);
 
-            //GraphList.Add(vY);
-            //GraphDictionary.Add("Y", vY);
+            GraphList.Add(vY);
+            GraphDictionary.Add("Y", vY);
 
-            //GraphList.Add(vZ);
-            //GraphDictionary.Add("Z", vZ);
+            GraphList.Add(vZ);
+            GraphDictionary.Add("Z", vZ);
         }
 
         /// <summary>
@@ -212,6 +212,8 @@ namespace DijkstrasAlgorithm
             Reset();
 
             int distanceBetweenNeighbors = 0;
+            int tempSmallestDistance = int.MaxValue;
+            string tempSmallestName = null;
 
             name = name.ToUpper();
 
@@ -220,70 +222,77 @@ namespace DijkstrasAlgorithm
 
             Queue<Vertex> searchQueue = new Queue<Vertex>();            
             Vertex tempVertex;
-            Vertex shortestVertex = null;
+            Vertex shortestVertex = GraphDictionary[name];
 
             try
             {
-                searchQueue.Enqueue(GraphDictionary[name]);
                 GraphDictionary[name].Visited = true;
 
                 do
                 {
-                    tempVertex = GetAdjacentNonPermanent(searchQueue.Peek().Name);
-
+                    tempVertex = GetAdjacentUnvisited(shortestVertex.Name);
+                    
                     if (tempVertex != null)
                     {
                         distanceBetweenNeighbors = adjMatrix[
-                                                        GraphList.IndexOf(GraphDictionary[searchQueue.Peek().Name]),
+                                                        GraphList.IndexOf(GraphDictionary[shortestVertex.Name]),
                                                         GraphList.IndexOf(tempVertex)
-                                                   ];
+                                                    ];
 
                         if (tempVertex.Neighbor == null)
                         {
-                            tempVertex.Neighbor = GraphDictionary[searchQueue.Peek().Name];
-
                             if (!tempVertex.Final)
                             {
+                                tempVertex.Neighbor = GraphDictionary[shortestVertex.Name];
                                 tempVertex.Distance = distanceBetweenNeighbors + tempVertex.Neighbor.Distance;
-                            }                            
+                            }
                         }
                         else
                         {
-                            if (tempVertex.Distance > (distanceBetweenNeighbors + tempVertex.Neighbor.Distance))
+                            if (tempVertex.Distance > (distanceBetweenNeighbors + shortestVertex.Distance))
                             {
-                                tempVertex.Neighbor = GraphDictionary[searchQueue.Peek().Name];
-
                                 if (!tempVertex.Final)
                                 {
-                                    tempVertex.Distance = distanceBetweenNeighbors + tempVertex.Neighbor.Distance;
+                                    tempVertex.Neighbor = shortestVertex;
+                                    tempVertex.Distance = distanceBetweenNeighbors + shortestVertex.Distance;
+
+                                }
+                            }
+                            else if (tempVertex.Distance < (distanceBetweenNeighbors + shortestVertex.Distance))
+                            {
+                                if (!tempVertex.Final)
+                                {
+                                    shortestVertex.Neighbor = tempVertex;
+                                    shortestVertex.Distance = tempVertex.Distance;
                                 }                                
                             }
-                        }
-
-                        if (!searchQueue.Contains(tempVertex))
-                        {
-                            searchQueue.Enqueue(tempVertex);
                         }
                     }
                     else
                     {
-                        VisitedList.Add(searchQueue.Dequeue());                             // If the vertex has no further adjacencies, remove it from the stack
-                        shortestVertex.Final = true;
+
                         ResetVisited();
+
+                        shortestVertex = GraphDictionary[tempSmallestName];
+                        shortestVertex.Final = true;
+
+                        tempSmallestDistance = int.MaxValue;
+                        tempSmallestName = null;
                     }
 
-                    if ((shortestVertex != null) && (tempVertex != null))
+                    if ((shortestVertex != null) && (tempVertex != null) && (!tempVertex.Final))
                     {
-                        if (shortestVertex.Distance > tempVertex.Distance)
+                        if (tempSmallestDistance > tempVertex.Distance)
                         {
-                            shortestVertex = tempVertex;
+                            tempSmallestDistance = tempVertex.Distance;
+                            tempSmallestName = tempVertex.Name;
                         }
 
                     }
-                    else if (tempVertex != null)
+                    else if ((tempVertex != null) && (!tempVertex.Final))
                     {
                         shortestVertex = tempVertex;
-                    }
+                    }                    
 
                     tempVertex = null;
 
@@ -306,9 +315,9 @@ namespace DijkstrasAlgorithm
         /// </summary>
         /// <param name="name">Name/Key of the Dictionary item to look for</param>
         /// <returns>Vertex of the next, previously unvisited vertex</returns>
-        public Vertex GetAdjacentNonPermanent(String name)
+        public Vertex GetAdjacentNonFinal(String name)
         {
-            bool foundVisited = false;
+            bool nonFinal = false;
             int indexOfVertexInList = 0;
             int incrementor = 0;
             Vertex returnValue = null;
@@ -320,17 +329,17 @@ namespace DijkstrasAlgorithm
                 do                                                                          // Loop through vertices until one is found that
                 {                                                                           // wasn't found before
                     if ((adjMatrix[indexOfVertexInList, incrementor] != 0) &&
-                        (!GraphList[incrementor].Visited) &&
+                        (!GraphList[incrementor].Final) &&
                         (!VisitedList.Contains(GraphList[incrementor])))
                     {
                         returnValue = GraphList[incrementor];                               // Return the next vertex
-                        GraphList[incrementor].Visited = true;                              // Set it's "visited" property to true
-                        foundVisited = true;                                                // Set the "found" variable to true to break the loop
+                        GraphList[incrementor].Final = true;                              // Set it's "visited" property to true
+                        nonFinal = true;                                                    // Set the "found" variable to true to break the loop
                     }
 
                     incrementor++;                                                          // do/while incrementor
 
-                } while ((!foundVisited) && (incrementor < adjMatrix.GetLength(1)));        // Once we find a vertex, or get to the end of the matrix, break
+                } while ((!nonFinal) && (incrementor < adjMatrix.GetLength(1)));            // Once we find a vertex, or get to the end of the matrix, break
             }
 
             return returnValue;
@@ -467,6 +476,37 @@ namespace DijkstrasAlgorithm
                     throw new IndexOutOfRangeException("The specified index does not exist");
                 }
             }
+        }
+
+        public string FindPath(string startLocation, string destination)
+        {
+            string returnValue = null;
+
+            startLocation = startLocation.ToUpper();
+            destination = destination.ToUpper();
+
+            List<string> pathList = new List<string>();
+
+            do
+            {
+                pathList.Add(destination);
+
+                destination = GraphDictionary[destination].Neighbor.Name;
+
+            } while (destination != startLocation);
+            
+            StringBuilder returnString = new StringBuilder();
+
+            foreach (string pathString in pathList)
+            {
+                returnString.Append(pathString + "\n");
+            }
+
+            returnString.Append(startLocation);
+
+            returnValue = returnString.ToString();
+
+            return returnValue;
         }
 
         /// <summary>
