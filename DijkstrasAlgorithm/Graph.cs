@@ -230,12 +230,6 @@ namespace DijkstrasAlgorithm
 
                 do
                 {
-                    if (searchQueue.Peek().Name.Equals("U"))
-                        Console.WriteLine();
-
-                    if (searchQueue.Peek().Name.Equals("R"))
-                        Console.WriteLine();
-
                     nextVertex = GetAdjacentUnvisited(searchQueue.Peek().Name);             // Get next adjacent vertex
 
                     if (nextVertex != null)
