@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 /// <summary>
 /// IGME-106 - Game Development and Algorithmic Problem Solving
-/// Practice exercise 19
-/// Class Description   : Actual graph
+/// Practice exercise 20
+/// Class Description   : Implementation of Dijkstras Algoritm
 /// Author              : Benjamin Kleynhans
 /// Modified By         : Benjamin Kleynhans
-/// Date                : April 19, 2018
+/// Date                : April 23, 2018
 /// Filename            : Graph.cs
 /// </summary>
 
@@ -22,44 +22,38 @@ namespace DijkstrasAlgorithm
         public static List<Vertex> GraphList { get; set; }
         private static List<Vertex> VisitedList { get; set; }
 
-        private int[,] adjMatrix = new int[26, 26]                                          // Create a pretty large adjacency matrix
+        /// <summary>
+        /// Create a pretty large adjacency matrix
+        /// </summary>
+        private int[,] adjMatrix = new int[26, 26]
             {   //A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
-          /*A*/ { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-          /*B*/ { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*A*/ { 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*B*/ { 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*C*/ { 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-          /*D*/ { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*D*/ { 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*E*/ { 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-          /*F*/ { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-          /*G*/ { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-          /*H*/ { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*F*/ { 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*G*/ { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*H*/ { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*I*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*J*/ { 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*K*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*L*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*M*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
           /*N*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-          /*O*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*O*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
           /*P*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-          /*Q*/ { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-          /*R*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-          /*S*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
+          /*Q*/ { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+          /*R*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+          /*S*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0 },
           /*T*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-          /*U*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-          /*V*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-          /*W*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
+          /*U*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 },
+          /*V*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 },
+          /*W*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1 },
           /*X*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 },
-          /*Y*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
-          /*Z*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 }
+          /*Y*/ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
+          /*Z*/ { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 }
             };
-
-        //private int[,] adjMatrix = new int[5, 5]
-        //{    //A, B, C, D, E
-        ///*A*/ {0, 1, 3, 0, 0 },
-        ///*B*/ {1, 0, 1, 4, 0 },
-        ///*C*/ {3, 1, 0, 2, 1 },
-        ///*D*/ {0, 4, 2, 0, 1 },
-        ///*E*/ {0, 0, 1, 1, 0 }
-        //};
 
         /// <summary>
         /// Constructor
@@ -209,96 +203,81 @@ namespace DijkstrasAlgorithm
         /// <param name="name">Starting vertex to calculate from</param>
         public void ShortestPath(string name)
         {
-            Reset();
+            PriorityQueue searchQueue = new PriorityQueue();            
+            Vertex nextVertex;
 
-            int distanceBetweenNeighbors = 0;
-            int tempSmallestDistance = int.MaxValue;
-            string tempSmallestName = null;
+            List<Vertex> currentVertices = new List<Vertex>();
 
-            name = name.ToUpper();
+            Reset();                                                                        // Reset all graph weight information
 
-            GraphDictionary[name].Distance = 0;
+            name = name.ToUpper();                                                          // Set input data to uppercase
+
+            if (!GraphDictionary.ContainsKey(name))                                         // If the supplied index doesn't exist, throw exception
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            GraphDictionary[name].Distance = 0;                                             // Set first node properties
             GraphDictionary[name].Final = true;
 
-            Queue<Vertex> searchQueue = new Queue<Vertex>();            
-            Vertex tempVertex;
-            Vertex shortestVertex = GraphDictionary[name];
+            int distanceBetweenNeighbors;
+            int distanceToSource;
 
             try
             {
-                GraphDictionary[name].Visited = true;
+                GraphDictionary[name].Visited = true;                                       // Set first vertex as visited
+                searchQueue.Enqueue(GraphDictionary[name]);                                 // Add first vertex to priority queue
 
                 do
                 {
-                    tempVertex = GetAdjacentUnvisited(shortestVertex.Name);
-                    
-                    if (tempVertex != null)
+                    nextVertex = GetAdjacentUnvisited(searchQueue.Peek().Name);             // Get next adjacent vertex
+
+                    if (nextVertex != null)
                     {
-                        distanceBetweenNeighbors = adjMatrix[
-                                                        GraphList.IndexOf(GraphDictionary[shortestVertex.Name]),
-                                                        GraphList.IndexOf(tempVertex)
+                        distanceBetweenNeighbors = adjMatrix[                               // Calculate distance between focus and neighbor
+                                                        GraphList.IndexOf(GraphDictionary[searchQueue.Peek().Name]),
+                                                        GraphList.IndexOf(nextVertex)
                                                     ];
 
-                        if (tempVertex.Neighbor == null)
+                        distanceToSource = (distanceBetweenNeighbors + searchQueue.Peek().Distance);// Calculate distance to head
+
+                        if ((
+                                (nextVertex.Neighbor == null) ||                            // IF neighbor is null
+                                (nextVertex.Distance > distanceToSource)                    // OR it has a larger distance than the new vertex
+                            ) && (
+                                !nextVertex.Final                                           // AND it is not set to final
+                            ))
                         {
-                            if (!tempVertex.Final)
-                            {
-                                tempVertex.Neighbor = GraphDictionary[shortestVertex.Name];
-                                tempVertex.Distance = distanceBetweenNeighbors + tempVertex.Neighbor.Distance;
-                            }
-                        }
-                        else
-                        {
-                            if (tempVertex.Distance > (distanceBetweenNeighbors + shortestVertex.Distance))
-                            {
-                                if (!tempVertex.Final)
-                                {
-                                    tempVertex.Neighbor = shortestVertex;
-                                    tempVertex.Distance = distanceBetweenNeighbors + shortestVertex.Distance;
+                            nextVertex.Neighbor = searchQueue.Peek();                       // Set neighbor's neighbor to head
+                            nextVertex.Distance = distanceToSource;                         // Set new distance
 
-                                }
-                            }
-                            else if (tempVertex.Distance < (distanceBetweenNeighbors + shortestVertex.Distance))
-                            {
-                                if (!tempVertex.Final)
-                                {
-                                    shortestVertex.Neighbor = tempVertex;
-                                    shortestVertex.Distance = tempVertex.Distance;
-                                }                                
-                            }
-                        }
-                    }
-                    else
-                    {
-
-                        ResetVisited();
-
-                        shortestVertex = GraphDictionary[tempSmallestName];
-                        shortestVertex.Final = true;
-
-                        tempSmallestDistance = int.MaxValue;
-                        tempSmallestName = null;
-                    }
-
-                    if ((shortestVertex != null) && (tempVertex != null) && (!tempVertex.Final))
-                    {
-                        if (tempSmallestDistance > tempVertex.Distance)
-                        {
-                            tempSmallestDistance = tempVertex.Distance;
-                            tempSmallestName = tempVertex.Name;
+                            searchQueue.Enqueue(nextVertex);                                // Add the neighbor to the priority queue
                         }
 
-                    }
-                    else if ((tempVertex != null) && (!tempVertex.Final))
-                    {
-                        shortestVertex = tempVertex;
-                    }                    
+                        distanceBetweenNeighbors = 0;
+                        distanceToSource = 0;
 
-                    tempVertex = null;
+                        if (!nextVertex.Final)                                              // If the neighbor is not yet set to final
+                        {
+                            currentVertices.Add(nextVertex);                                // add it to the current list
+                        }
+                    }
+                    else                                                                    // If the neighbor is null (does not exist)
+                    {
+                        if (currentVertices.Count != 0)                                     // If vertices were added to the current list
+                        {
+                            UpdateFinals(currentVertices);                                  // Update final properties
+                            currentVertices.Clear();                                        // Clear the list
+                        }
+
+                        ResetVisited();                                                     // Reset visited properties
+                        searchQueue.Dequeue();                                              // Remove the vertex from the queue
+                        
+                    }
+
+                    nextVertex = null;                                                      // Set neighbor to null
 
                 } while (searchQueue != null);
-
-
             }
             catch (Exception DepthFirstException)                                           // Catch possible exceptions
             {
@@ -311,38 +290,41 @@ namespace DijkstrasAlgorithm
         }
 
         /// <summary>
-        /// Return the name (key) of the next unvisited vertex
+        /// Loops through the list of vertices that were visited to determine which
+        /// vertex has the shortest distance to head
         /// </summary>
-        /// <param name="name">Name/Key of the Dictionary item to look for</param>
-        /// <returns>Vertex of the next, previously unvisited vertex</returns>
-        public Vertex GetAdjacentNonFinal(String name)
+        /// <param name="currentVertices">List of vertices visited this cycle</param>
+        private void UpdateFinals(List<Vertex> currentVertices)
         {
-            bool nonFinal = false;
-            int indexOfVertexInList = 0;
-            int incrementor = 0;
-            Vertex returnValue = null;
+            Vertex smallestVertex = currentVertices[0];
+            List<Vertex> sameDistance = new List<Vertex>();
 
-            if (GraphDictionary.ContainsKey(name))                                          // Test if the key exists in the dictionary
+            foreach (Vertex vertex in currentVertices)                                      // For each vertex in the list
             {
-                indexOfVertexInList = GraphList.IndexOf(GraphDictionary[name]);             // Get the index of the vertex
-
-                do                                                                          // Loop through vertices until one is found that
-                {                                                                           // wasn't found before
-                    if ((adjMatrix[indexOfVertexInList, incrementor] != 0) &&
-                        (!GraphList[incrementor].Final) &&
-                        (!VisitedList.Contains(GraphList[incrementor])))
+                if (vertex.Distance < smallestVertex.Distance)                              // If the distance of one is less than the distance of another
+                {
+                    smallestVertex = vertex;                                                // Set the smallest vertex equal to that vertex
+                }
+                else if (vertex.Distance.Equals(smallestVertex.Distance))                   // If there are multiple vertices with the same distance
+                {
+                    if (!sameDistance.Contains(vertex))
                     {
-                        returnValue = GraphList[incrementor];                               // Return the next vertex
-                        GraphList[incrementor].Final = true;                              // Set it's "visited" property to true
-                        nonFinal = true;                                                    // Set the "found" variable to true to break the loop
+                        sameDistance.Add(vertex);                                           // Add them to a list
                     }
-
-                    incrementor++;                                                          // do/while incrementor
-
-                } while ((!nonFinal) && (incrementor < adjMatrix.GetLength(1)));            // Once we find a vertex, or get to the end of the matrix, break
+                }
             }
 
-            return returnValue;
+            if (smallestVertex.Distance.Equals(sameDistance[0].Distance))                   // If the items in the list have the same value as the
+            {                                                                               // item with the smallest distance
+                foreach(Vertex vertex in sameDistance)
+                {
+                    vertex.Final = true;                                                    // Set all items in the list to final
+                }
+            }
+            else
+            {
+                smallestVertex.Final = true;                                                // If they are not the same size as the smallest vertex
+            }                                                                               // set only the smallest vertex final
         }
 
         /// <summary>
@@ -381,103 +363,11 @@ namespace DijkstrasAlgorithm
         }
 
         /// <summary>
-        /// Search for the next available vertex using DFS
+        /// Search through the updated list and return the shortest path
         /// </summary>
-        /// <param name="name">Name/Key of the Dictionary item to look for</param>
-        public void DepthFirst(string name)
-        {
-            name = name.ToUpper();
-
-            Stack<Vertex> graphStack = new Stack<Vertex>();
-            Vertex tempVertex = null;
-
-            Reset();                                                                        // Reset the "visited property of the vertexes"
-
-            try
-            {
-                Console.WriteLine(name);
-
-                graphStack.Push(GraphDictionary[name]);                                  // Print, and push the name provided
-                GraphDictionary[name].Visited = true;
-
-                do                                                                          // Continue the loop until all elements have been removed form the stack
-                {
-                    tempVertex = GetAdjacentUnvisited(graphStack.Peek().Name);              // Get the next unvisited vertex
-
-                    if (tempVertex != null)
-                    {
-                        Console.WriteLine(tempVertex.Name);                                 // If the vertex is not null, print it and add to stack
-                        graphStack.Push(tempVertex);
-                    }
-                    else
-                    {
-                        graphStack.Pop();                                               // If the vertex has no further adjacencies, remove it from the stack
-                    }
-
-                    tempVertex = null;
-
-
-                } while (graphStack.Count != 0);                                            // Continue the loop until all elements have been removed from the stack
-            }
-            catch (Exception DepthFirstException)                                           // Catch possible exceptions
-            {
-                if ((DepthFirstException is KeyNotFoundException) ||
-                    (DepthFirstException is IndexOutOfRangeException))
-                {
-                    throw new IndexOutOfRangeException("The specified index does not exist");
-                }
-            }            
-        }
-
-        /// <summary>
-        /// Search for the next available vertex using DFS
-        /// </summary>
-        /// <param name="name">Name/Key of the Dictionary item to look for</param>
-        public void BreadthFirst(string name)
-        {
-            name = name.ToUpper();
-
-            Queue<Vertex> graphQueue = new Queue<Vertex>();
-            Vertex tempVertex = null;
-
-            Reset();                                                                        // Reset the "visited property of the vertexes"
-
-            try
-            {
-                Console.WriteLine(name);
-
-                graphQueue.Enqueue(GraphDictionary[name]);                                  // Print, and push the name provided
-                GraphDictionary[name].Visited = true;
-
-                do                                                                          // Continue the loop until all elements have been removed form the stack
-                {
-                    tempVertex = GetAdjacentUnvisited(graphQueue.Peek().Name);              // Get the next unvisited vertex
-
-                    if (tempVertex != null)
-                    {
-                        Console.WriteLine(tempVertex.Name);                                 // If the vertex is not null, print it and add to stack
-                        graphQueue.Enqueue(tempVertex);
-                    }
-                    else
-                    {
-                        graphQueue.Dequeue();                                               // If the vertex has no further adjacencies, remove it from the stack
-                    }
-
-                    tempVertex = null;
-
-
-                } while (graphQueue.Count != 0);                                            // Continue the loop until all elements have been removed from the stack
-            }
-            catch (Exception DepthFirstException)                                           // Catch possible exceptions
-            {
-                if ((DepthFirstException is KeyNotFoundException) ||
-                    (DepthFirstException is IndexOutOfRangeException))
-                {
-                    throw new IndexOutOfRangeException("The specified index does not exist");
-                }
-            }
-        }
-
+        /// <param name="startLocation">Start location entered by user</param>
+        /// <param name="destination">End locatino entered by user</param>
+        /// <returns>A string containing the path to follow</returns>
         public string FindPath(string startLocation, string destination)
         {
             string returnValue = null;
@@ -491,7 +381,18 @@ namespace DijkstrasAlgorithm
             {
                 pathList.Add(destination);
 
-                destination = GraphDictionary[destination].Neighbor.Name;
+                try
+                {
+                    destination = GraphDictionary[destination].Neighbor.Name;
+                } catch (Exception KeyException)
+                {
+                    if ((KeyException is IndexOutOfRangeException) ||
+                        (KeyException is KeyNotFoundException))
+                    {
+                        throw new IndexOutOfRangeException(KeyException.Message);
+                    }                    
+                }
+                
 
             } while (destination != startLocation);
             

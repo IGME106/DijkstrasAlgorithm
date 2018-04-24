@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 /// <summary>
 /// IGME-106 - Game Development and Algorithmic Problem Solving
-/// Practice exercise 19
-/// Class Description   : Graph Vertex
+/// Practice exercise 20
+/// Class Description   : Vertex holds data
 /// Author              : Benjamin Kleynhans
 /// Modified By         : Benjamin Kleynhans
-/// Date                : April 19, 2018
+/// Date                : April 23, 2018
 /// Filename            : Vertex.cs
 /// </summary>
 
@@ -36,7 +36,7 @@ namespace DijkstrasAlgorithm
         }
 
         /// <summary>
-        /// Resets the properties in the vertex
+        /// Resets the properties of the vertex
         /// </summary>
         public void ResetVertex()
         {            
@@ -47,6 +47,9 @@ namespace DijkstrasAlgorithm
             ResetVisited();
         }
 
+        /// <summary>
+        /// Resets the visited property of the vertex
+        /// </summary>
         public void ResetVisited()
         {
             Visited = false;
