@@ -293,26 +293,6 @@ namespace DijkstrasAlgorithm
                     throw new IndexOutOfRangeException("The specified index does not exist");
                 }
             }
-
-            StringBuilder myString = new StringBuilder();
-
-
-            foreach (Vertex vertex in GraphList)
-            {
-                myString.Append(vertex.Name);
-                myString.Append(" --> ");
-
-                if (vertex.Neighbor != null)
-                {
-                    myString.Append(vertex.Neighbor.Name);
-                }
-
-                myString.Append(" --> ");
-                myString.Append(vertex.Distance);
-                myString.Append("\n");
-                                
-                Console.WriteLine(myString);
-            }
         }
 
         /// <summary>
