@@ -45,7 +45,6 @@ namespace DijkstrasAlgorithm
         public void Enqueue(Vertex passedObject)
         {
             ObjectList.Add(passedObject);
-            UpdatePriority();
         }
 
         /// <summary>
@@ -78,17 +77,69 @@ namespace DijkstrasAlgorithm
         }
 
         /// <summary>
-        /// Determine if the 
+        /// Moves the item with the higest priority to the front of the queue
         /// </summary>
         private void UpdatePriority()
         {
+            Vertex smallestVertex = ObjectList[0];
+
             foreach (Vertex listObject in ObjectList)
             {
-                if (listObject.Distance < ObjectList[0].Distance)
-                {                    
-                    ObjectList.Insert(0, listObject);
+                if (listObject.Distance < smallestVertex.Distance)
+                {
+                    smallestVertex = listObject;
                 }
             }
+
+            ObjectList.Remove(smallestVertex);
+            ObjectList.Insert(0, smallestVertex);
+        }
+
+        /// <summary>
+        /// Confirms whether the queue contains a value
+        /// </summary>
+        /// <param name="vertex">Value to check for</param>
+        /// <returns>True or False depending on availability</returns>
+        public bool Contains(Vertex vertex)
+        {
+            bool returnValue = false;
+
+            if (ObjectList.Contains(vertex))
+            {
+                returnValue = true;
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// ToString method
+        /// </summary>
+        /// <returns>All objects in the queue</returns>
+        public override string ToString()
+        {
+            string returnValue = null;
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (Vertex vertex in ObjectList)
+            {
+                stringBuilder.Append(vertex.Name);
+                stringBuilder.Append(" --> ");
+
+                if (vertex.Neighbor != null)
+                {
+                    stringBuilder.Append(vertex.Neighbor.Name);
+                }
+
+                stringBuilder.Append(" --> ");
+                stringBuilder.Append(vertex.Distance);
+                stringBuilder.Append(" || ");
+            }
+
+            returnValue = stringBuilder.ToString();
+
+            return returnValue;
         }
     }
 }
