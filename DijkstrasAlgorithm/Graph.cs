@@ -379,11 +379,11 @@ namespace DijkstrasAlgorithm
 
             do
             {
-                pathList.Add(destination);
+                pathList.Add(destination);                                                  // Add destination to path
 
                 try
                 {
-                    destination = GraphDictionary[destination].Neighbor.Name;
+                    destination = GraphDictionary[destination].Neighbor.Name;               // Get neighbor of destination
                 } catch (Exception KeyException)
                 {
                     if ((KeyException is IndexOutOfRangeException) ||
@@ -391,12 +391,11 @@ namespace DijkstrasAlgorithm
                     {
                         throw new IndexOutOfRangeException(KeyException.Message);
                     }                    
-                }
-                
+                }               
 
-            } while (destination != startLocation);
+            } while (destination != startLocation);                                         // Continue util we reach the last vertex in the path
             
-            StringBuilder returnString = new StringBuilder();
+            StringBuilder returnString = new StringBuilder();                               // Build a string with the path information
 
             foreach (string pathString in pathList)
             {
@@ -405,7 +404,7 @@ namespace DijkstrasAlgorithm
 
             returnString.Append(startLocation);
 
-            returnValue = returnString.ToString();
+            returnValue = returnString.ToString();                                          // Return the string
 
             return returnValue;
         }
